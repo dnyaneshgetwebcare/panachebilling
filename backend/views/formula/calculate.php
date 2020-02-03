@@ -97,31 +97,20 @@ $this->title = 'Formula';
 $form = ActiveForm::begin(['enableClientValidation'=>false,'id'=>'booking_header_form','action'=>"index.php?r=formula/save-calculate", 'options' => ['class' => 'disable-submit-buttons']]);
 ?>
    <ul class="nav nav-tabs formula-tab" role="tablist">
-                                <li class="nav-item"> <a class="nav-link active" data-toggle="tab" href="#category_split" role="tab" style="font-size: large;">Category Split</a> </li>
-                                <li class="nav-item"> <a  style="font-size: large;" class="nav-link" data-toggle="tab" href="#expense_split" role="tab">Expense Split</a> </li>
-                                <!-- <li class="nav-item"> <a   style="font-size: large;" class="nav-link" data-toggle="tab" href="#settings" role="tab">Payment</a> </li> -->
-                            </ul>
-
-
-
-
+         <li class="nav-item"> <a class="nav-link active" data-toggle="tab" href="#category_split" role="tab" style="font-size: large;">Category Split</a> </li>
+         <li class="nav-item"> <a  style="font-size: large;" class="nav-link" data-toggle="tab" href="#expense_split" role="tab">Expense Split</a> </li>
+         <!-- <li class="nav-item"> <a   style="font-size: large;" class="nav-link" data-toggle="tab" href="#settings" role="tab">Payment</a> </li> -->
+   </ul>
 <div class="tab-content">
           <div class="tab-pane" id="expense_split" role="tabpanel">
-
-
-                            <div class="card-body">
-                              
-      
+            <div class="card-body">
            <hr>
-                     <h4 class="card-title">Expense Cal. Table</h4>
-                        
-                                <div class="table-responsive">
-                                    <table class="table color-bordered-table muted-bordered-table">
-                                        <thead>
-                                            <tr>
-                                              <th>Exp. Category</th>
-                                             
-                                       
+             <h4 class="card-title">Expense Cal. Table</h4>
+              <div class="table-responsive">
+                 <table class="table color-bordered-table muted-bordered-table">
+                   <thead>
+                   <tr>
+                     <th>Exp. Category</th>                      
                                               <?php 
                                                 $expense_cat_summary=array();
                                                 $expense_count=0;
@@ -212,7 +201,7 @@ $form = ActiveForm::begin(['enableClientValidation'=>false,'id'=>'booking_header
                                               foreach ($model_exp_category as $key => $value) {
                                                 ?>
                                                 
-                                                <th style="font-size: 20px;"> ₹ <?= "<span id='total_cat_exp_amount_".$value->id."'>".number_format($expense_cat_summary[$value->id])."</span>"; ?></th>
+                                                <th style="font-size: 20px;"> ₹ <?= "<span id='total_cat_exp_amount_".$key."'>".number_format($expense_cat_summary[$value->id])."</span>"; ?></th>
                                                 <?php } ?>
                                         </tr>
                                     </table>
@@ -226,55 +215,34 @@ $form = ActiveForm::begin(['enableClientValidation'=>false,'id'=>'booking_header
                  <div class="tab-pane active" id="category_split" role="tabpanel">
 
 
-                            <div class="card-body">
-                               
-                                <div class="col-md-12">
-
-<div class="col-md-6">
-<div class="form-group row">
- <label class="control-label text-left col-md-3" style="padding-right: 0px !important;padding-top: 10px;">Total Expense</label>
-            <div class="col-md-5">
-               <div class="form-group field-customermaster-contact_nos required">
-
-<input type="text" id="total_expense" class="form-control text_first" name="total_expense" onkeyup="recalculat()" value="<?= $total_expense; ?>"  placeholder="Expense" autocomplete="off" aria-required="true">
-
-<div class="help-block"></div>
-</div>
-</div>
-    </div>
-    </div>
-
-       </div>
-       <div class="row"> </div>
+        <div class="card-body">
            <hr>
-                     <h4 class="card-title">Calculation Table</h4>
-                        
-                                <div class="table-responsive">
-                                    <table class="table color-bordered-table muted-bordered-table">
-                                        <thead>
-                                            <tr>
-                                            	<th>Category</th>
-                                                <th>Turnover</th>
-                                          <th>Cat. Expense</th>
-                                            	<?php 
-                                                $reviver_array=array();
-                                                $reciver_count=0;
-                                                $total_turn_over=0;
-                                                $total_cat_expense=0;
-                                               
-                                                foreach ($model_reciver as $key => $value) {
-                                                    $reciver_count++;
-                                                    $reviver_array[$value->id]=0;
+               <h4 class="card-title">Calculation Table</h4>
+                 <div class="table-responsive">
+                     <table class="table color-bordered-table muted-bordered-table">
+                       <thead>
+                        <tr>
+                          <th>Category</th>
+                          <th>Turnover</th>
+                          <th>Cat. Expense</th>
+                            <th>Expense Split</th>
+                        <?php 
+                          $reviver_array=array();
+                          $reciver_count=0;
+                          $total_turn_over=0;
+                          $total_cat_expense=0;        
+                            foreach ($model_reciver as $key => $value) {
+                                      $reciver_count++;
+                                      $reviver_array[$value->id]=0;
                                                 ?>
-                                                
-                                                <th><?= $value->name; ?></th>
-                                                <?php }
-                                                 $reviver_array[6]=0;
-                                                 ?>
-                                                
-                                            </tr>
+                                      <th><?= $value->name; ?></th>
+                                     <?php }
+                                         $reviver_array[6]=0;
+                                      ?>     
+                                    </tr>
                                         </thead>
-                                        <?php 
+                                  <?php 
+                                //  print_r($expense_cat_summary);die;
                                       $category_count=0;
                                         foreach ($model_category as $key_category => $value) {
                                            $category_count++;
@@ -288,8 +256,14 @@ $form = ActiveForm::begin(['enableClientValidation'=>false,'id'=>'booking_header
                                             ?> 
 
                                         	<td> <input style="width: 100px" type="text" id="total_<?= $value->id;?>" class="form-control text_first" onkeyup="recalculat()" value="<?= $category_turn_over;?>" name="Total[<?= $value->id;?>]"  placeholder="" autocomplete="off" aria-required="true"> </td>
-                                          <td> <input style="width: 100px" type="text" id="cat_vis_expense_<?= $value->id;?>" class="form-control text_first" onkeyup="recalculat()" value="<?= $category_expense;?>" name="Total[<?= $value->id;?>]"  placeholder="" autocomplete="off" aria-required="true"> </td>
-                                        
+                                          <td> 
+                                            <input style="width: 100px" type="text" id="cat_vis_expense_<?= $value->id;?>" class="form-control text_first" onkeyup="recalculat()" value="<?= $category_expense;?>" name="Total[<?= $value->id;?>]"  placeholder="" autocomplete="off" aria-required="true"> 
+                                          </td>
+                                        <td> 
+                                            <span id="exp_cat_split_<?= $value->id; ?>"><?= number_format($item_cat_expense_split_array[$value->id]); ?>
+                                              
+                                            </span>
+                                          </td>
                                         
                                          <?php	foreach ($model_reciver as $key_recv => $recv) {
                                              $expense = $total_expense*($value->formula(0)/100);
@@ -302,23 +276,23 @@ $form = ActiveForm::begin(['enableClientValidation'=>false,'id'=>'booking_header
                                          <?= "<span id='expense_amount_".$value->id."_".$recv->id."'>".number_format($expense)."</span>"; ?>
                                           <input type="hidden" id="expense_per_<?= $value->id.'_'.$recv->id ;?>" class="form-control text_first"  value="<?= $recv->formula($value->id); ?>"  placeholder="Expense" autocomplete="off" aria-required="true">
                                            </td>
-                                                <?php
-                                            }else{
-                                                ?>
-                                                <td>
-                                                    <?php 
-                                                    $earning_cat=(($recv->formula($value->id))/100)*($category_turn_over-$expense);
+                         <?php
+                                  }else{
+                             ?>
+                             <td>
+                   <?php 
+                      $earning_cat=(($recv->formula($value->id))/100)*($category_turn_over-$expense);
                                                     //$reviver_array[$value->id]=0;
-                                                    $reviver_array[$recv->id] += $earning_cat;
-                                                    echo "<span id='reciver_amount_".$value->id."_".$recv->id."'>".number_format($earning_cat)."</span>"; ?>
-                                                    <input type="hidden" id="reciver_per_<?= $value->id.'_'.$recv->id ;?>" class="form-control text_first"  value="<?= $recv->formula($value->id); ?>"  placeholder="Expense" autocomplete="off" aria-required="true">
-                                                     </td>
-                                                <?php }
+                   $reviver_array[$recv->id] += $earning_cat;
+                  echo "<span id='reciver_amount_".$value->id."_".$recv->id."'>".number_format($earning_cat)."</span>"; ?>
+                   <input type="hidden" id="reciver_per_<?= $value->id.'_'.$recv->id ;?>" class="form-control text_first"  value="<?= $recv->formula($value->id); ?>"  placeholder="Expense" autocomplete="off" aria-required="true">
+                   </td>
+                  <?php }
                                         		
-                                        	}
-                                        	echo "</tr>";
-                                        } ?>
-                                        <tr class="table-warning"> 
+                  }
+                echo "</tr>";
+               } ?>
+              <tr class="table-warning"> 
                                             <td>Total</td>
                                             <th style="font-size: 20px;">₹ <?= "<span id='reciver_total_amount_6'>".number_format($reviver_array[6])."</span>"; ?></th>
                                             <th style="font-size: 20px;">₹ <?= "<span id='total_category_expense'>".number_format($total_cat_expense)."</span>"; ?></th>
@@ -393,13 +367,14 @@ $form = ActiveForm::begin(['enableClientValidation'=>false,'id'=>'booking_header
     var reciver_count=<?= $reciver_count; ?>;
     var expense_category_count=<?= $expense_count; ?>;
     function recalculat() {
-        var total_expense=$('#total_expense').val();
+       // var total_expense=$('#total_expense').val();
         var total_turn_over=0;
         var cat_vise_total_expense=0;
         var categ_array=[0,0,0,0,0];
         for(var category_iterator=1; category_iterator<=category_count; category_iterator++ ){
             var category_turn_over=$('#total_'+category_iterator).val();
             var category_expense=$('#cat_vis_expense_'+category_iterator).val();
+            var split_expense=$('#exp_cat_split_'+category_iterator).html();
            // console.log("Turn Around"+category_turn_over);
 
             if(category_turn_over==""){
@@ -407,6 +382,9 @@ $form = ActiveForm::begin(['enableClientValidation'=>false,'id'=>'booking_header
                  }
                  if(category_expense==""){
                     category_expense=0;
+                 }
+                if(split_expense==""){
+                    split_expense=0;
                  }
 
                  cat_vise_total_expense = +cat_vise_total_expense + +category_expense;
@@ -417,7 +395,7 @@ $form = ActiveForm::begin(['enableClientValidation'=>false,'id'=>'booking_header
                     total_expense=0;
                  }
 
-                 var cat_expense_amount=(total_expense*(expense_per/100)).toFixed(2);
+                //var cat_expense_amount=(total_expense*(expense_per/100)).toFixed(2);
                  cat_expense_amount= +cat_expense_amount+ +category_expense;
                var cat_earning=category_turn_over-cat_expense_amount;
                  $("#expense_amount_"+category_iterator+'_0').html(cat_expense_amount);
@@ -480,11 +458,12 @@ function recalculate_expesne() {
        }
       
    }
-     $("#item_cat_expense_total_"+expesne_category_iterator).html(sum_exp_cat_total);
+     $("#total_cat_exp_amount_"+expesne_category_iterator).html(sum_exp_cat_total);
  }
 
 for(var category_iterator=0; category_iterator<=category_count; category_iterator++){
   $("#item_cat_expense_total_"+category_iterator).html(cat_amount_array[category_iterator]);
+  $("#exp_cat_split_"+category_iterator).html(cat_amount_array[category_iterator]);
 }
 
 }
