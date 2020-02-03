@@ -106,6 +106,123 @@ $form = ActiveForm::begin(['enableClientValidation'=>false,'id'=>'booking_header
 
 
 <div class="tab-content">
+          <div class="tab-pane" id="expense_split" role="tabpanel">
+
+
+                            <div class="card-body">
+                              
+      
+           <hr>
+                     <h4 class="card-title">Expense Cal. Table</h4>
+                        
+                                <div class="table-responsive">
+                                    <table class="table color-bordered-table muted-bordered-table">
+                                        <thead>
+                                            <tr>
+                                              <th>Exp. Category</th>
+                                             
+                                       
+                                              <?php 
+                                                $expense_cat_summary=array();
+                                                $expense_count=0;
+                                                $expense_cat_amounts=array();;
+                                                $total_cat_expense=0;
+                                               
+                                                foreach ($model_exp_category as $key => $expense_category) {
+                                                    $expense_count++;
+                                                    $expense_cat_summary[$expense_category->id]=0;
+                                                ?>
+                                                
+                                                <th><?= $expense_category->name; ?></th>
+                                               
+                                                <?php }
+                                               //echo "dfdh"; print_r($model_exp_category);die;
+                                                 ?>
+                                                <th> Total </th>
+                                            </tr>  
+                                            <tr>
+                                              
+                                              <td>Total Expense</td>
+                                       
+                                              <?php 
+                                               
+                                               
+                                                foreach ($model_exp_category as $key => $expense_category) {
+                                                   $cat_expense=($key+1)*1000;
+                                                   $expense_cat_amounts[$expense_category->id]= $cat_expense;
+
+
+                                                ?>
+                                                
+                                                  <td> <input type="text" id="expense_cat_<?= $key; ?>" name="" onkeyup="recalculate_expesne()"  value="<?= $cat_expense; ?>">
+                                    </td>
+                                               
+                                                <?php }
+                                               //echo "dfdh"; print_r($model_exp_category);die;
+                                                 ?>
+                                                <td></td>
+                                            </tr>
+                                        </thead>
+                                        <?php 
+                                      //$category_count=0;
+                                         $item_cat_expense_split_array=array();
+                                        foreach ($model_category as   $item_category) {
+                                         //  $category_count++;
+                                         $item_cat_key =$item_category->id;
+                                         
+                                            ?> 
+                                   
+                                         <tr>
+                                            <td> <?= $item_category->name; ?></td>
+                                        
+                                         <?php  
+
+                                         $item_cat_expense_total=0;
+                                         foreach ($model_exp_category as $exp_cat_key => $expense_category) {
+                                          $expense_amount=$expense_cat_amounts[$expense_category->id];
+                                             $cat_expense_per = $expense_category->formula($item_category->id);
+                                          $calculated_exp_amount=($expense_amount*$cat_expense_per)/100;
+                                              $expense_cat_summary[$expense_category->id]+= $calculated_exp_amount;
+                                              $item_cat_expense_total+=$calculated_exp_amount;
+                                        ?>
+                                        
+                                                <td>
+                                                    <?php 
+                                                    
+                                                    echo "<span id='cat_expense_amount_".$item_cat_key."_".$exp_cat_key."'>".number_format($calculated_exp_amount)."</span>"; ?>
+                                                    <input type="text" id="cat_expense_per_<?= $item_cat_key.'_'.$exp_cat_key ;?>" class="form-control text_first"  value="<?= $cat_expense_per; ?>"  placeholder="Expense" autocomplete="off" aria-required="true">
+                                                     </td>
+                                                <?php //}
+                                            
+                                          
+                                        }
+                                       $item_cat_expense_split_array[$item_category->id]=$item_cat_expense_total;
+                                        ?>
+                                        <td> <span id="item_cat_expense_total_<?=$item_cat_key; ?>"><?= $item_cat_expense_total;  ?></span>
+                                        </td>
+                                         </tr>
+                                           <?php
+                                        } ?>
+
+                                        <tr class="table-warning"> 
+                                            <td>Total</td>
+                                           
+                                           
+                                            <?php 
+                                              foreach ($model_exp_category as $key => $value) {
+                                                ?>
+                                                
+                                                <th style="font-size: 20px;"> ₹ <?= "<span id='total_cat_exp_amount_".$value->id."'>".number_format($expense_cat_summary[$value->id])."</span>"; ?></th>
+                                                <?php } ?>
+                                        </tr>
+                                    </table>
+                                </div>
+<div>
+                                <hr> </div>
+                          
+                          
+                            </div>
+                          </div>
                  <div class="tab-pane active" id="category_split" role="tabpanel">
 
 
@@ -235,130 +352,7 @@ $form = ActiveForm::begin(['enableClientValidation'=>false,'id'=>'booking_header
                           
                             </div>
                           </div>
-                          <div class="tab-pane" id="expense_split" role="tabpanel">
-
-
-                            <div class="card-body">
-                               
-                                <div class="col-md-12">
-
-
-       </div>
-       <div class="row"> </div>
-           <hr>
-                     <h4 class="card-title">Expense Cal. Table</h4>
-                        
-                                <div class="table-responsive">
-                                    <table class="table color-bordered-table muted-bordered-table">
-                                        <thead>
-                                            <tr>
-                                              <th>Exp. Category</th>
-                                             
-                                       
-                                              <?php 
-                                                $expense_cat_summary=array();
-                                                $expense_count=0;
-                                                $expense_cat_amounts=array();;
-                                                $total_cat_expense=0;
-                                               
-                                                foreach ($model_exp_category as $key => $expense_category) {
-                                                    $expense_count++;
-                                                    $expense_cat_summary[$expense_category->id]=0;
-                                                ?>
-                                                
-                                                <th><?= $expense_category->name; ?></th>
-                                               
-                                                <?php }
-                                               //echo "dfdh"; print_r($model_exp_category);die;
-                                                 ?>
-                                                
-                                            </tr>  
-                                            <tr>
-                                              
-                                              <td>Total Expense</td>
-                                       
-                                              <?php 
-                                               
-                                               
-                                                foreach ($model_exp_category as $key => $expense_category) {
-                                                   $cat_expense=($key+1)*1000;
-                                                   $expense_cat_amounts[$expense_category->id]= $cat_expense;
-
-
-                                                ?>
-                                                
-                                                  <td> <input type="text" id="expense_cat_<?= $key; ?>" name="" onchange="recalculate_expesne()"  value="<?= $cat_expense; ?>">
-                                    </td>
-                                               
-                                                <?php }
-                                               //echo "dfdh"; print_r($model_exp_category);die;
-                                                 ?>
-                                                
-                                            </tr>
-                                        </thead>
-                                        <?php 
-                                      //$category_count=0;
-                                        foreach ($model_category as $item_cat_key =>  $item_category) {
-                                         //  $category_count++;
-                                          echo "<tr>";
-                                            echo '<td> '.$item_category->name.'</td>';
-                                         
-                                            ?> 
-                                   
-                                        
-                                        
-                                         <?php  foreach ($model_exp_category as $exp_cat_key => $expense_category) {
-                                          $expense_amount=$expense_cat_amounts[$expense_category->id];
-                                             $cat_expense_per = $expense_category->formula($item_category->id);
-                                          $calculated_exp_amount=($expense_amount*$cat_expense_per)/100;
-                                              $expense_cat_summary[$expense_category->id]+= $calculated_exp_amount;
-                                        ?>
-                                        
-                                                <td>
-                                                    <?php 
-                                                    
-                                                    echo "<span id='cat_expense_amount_".$item_cat_key."_".$exp_cat_key."'>".number_format($calculated_exp_amount)."</span>"; ?>
-                                                    <input type="text" id="cat_expense_per_<?= $item_cat_key.'_'.$exp_cat_key ;?>" class="form-control text_first"  value="<?= $cat_expense_per; ?>"  placeholder="Expense" autocomplete="off" aria-required="true">
-                                                     </td>
-                                                <?php //}
-                                            
-                                          }
-                                          echo "</tr>";
-                                        } ?>
-                                        <tr class="table-warning"> 
-                                            <td>Total</td>
-                                           
-                                           
-                                            <?php 
-                                              foreach ($model_exp_category as $key => $value) {
-                                                ?>
-                                                
-                                                <th style="font-size: 20px;"> ₹ <?= "<span id='total_cat_exp_amount_".$value->id."'>".number_format($expense_cat_summary[$value->id])."</span>"; ?></th>
-                                                <?php } ?>
-                                        </tr>
-                                    </table>
-                                </div>
-<div>
-                                <hr> </div>
-                                <div class="card-body m-b-20 m-t-10">
-                                <div class="row">
-                                    <div class="col-3">
-                                        <h1><span id="turn_over_summary">₹ <?= number_format($total_turn_over); ?> </span></h1>
-                                        <h6 class="text-muted">Total Turn Over</h6></div>
-                                    <div class="col-3">
-                                        <h1><span id="expense_summary">₹ <?= number_format($total_expense); ?> </span></h1>
-                                        <h6 class="text-muted">Total Expense</h6></div> 
-                                        <div class="col-3">
-                                        <h1><span id="total_earning">₹ <?= number_format($total_turn_over - $total_expense); ?> </span></h1>
-                                        <h6 class="text-muted">Total Earning</h6></div>
-                                   <!--  <div class="col-3 align-self-center text-right">
-                                        <button type="submit" class="btn btn-success">Post</button>
-                                    </div> -->
-                                </div>
-                            </div>
-                          
-                            </div>
-                          </div>
+                  
                         </div>
                               <?php ActiveForm::end(); ?>
                         </div>
@@ -464,6 +458,34 @@ var year=$('#year').val();
 
 function recalculate_expesne() {
 
+ var cat_amount_array=new Array(category_count);
+
+   for(var expesne_category_iterator=0; expesne_category_iterator<expense_category_count; expesne_category_iterator++ ){
+      
+       var exp_cat_amount= $("#expense_cat_"+expesne_category_iterator).val();
+       var sum_exp_cat_total=0;
+     for(var category_iterator=1; category_iterator<=category_count; category_iterator++ ){
+       var exp_cat_per= $("#cat_expense_per_"+category_iterator+"_"+expesne_category_iterator).val();
+       var calcu_expense_amount= (+exp_cat_per/100) * +exp_cat_amount;
+      // cat_expense_amount
+       $("#cat_expense_amount_"+category_iterator+"_"+expesne_category_iterator).html(calcu_expense_amount);
+       sum_exp_cat_total+= calcu_expense_amount;
+      
+       if(cat_amount_array[category_iterator]==null){
+        cat_amount_array[category_iterator]=0;
+       }
+       //console.log(cat_amount_array);
+       if(calcu_expense_amount!=null){
+         cat_amount_array[category_iterator]=+cat_amount_array[category_iterator] +calcu_expense_amount;
+       }
+      
+   }
+     $("#item_cat_expense_total_"+expesne_category_iterator).html(sum_exp_cat_total);
+ }
+
+for(var category_iterator=0; category_iterator<=category_count; category_iterator++){
+  $("#item_cat_expense_total_"+category_iterator).html(cat_amount_array[category_iterator]);
+}
 
 }
 
